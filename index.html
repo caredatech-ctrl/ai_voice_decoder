@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise AI Voice Verification Matrix</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* High-Luxury Glassmorphism & Neon Aesthetic */
+        :root {
+            --neon-blue: #00f0ff;
+            --neon-purple: #8a2be2;
+            --dark-bg: #0b0c10;
+            --glass-bg: rgba(20, 22, 30, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #e0e6ed;
+            --success-color: #00ff88;
+            --fail-color: #ff3366;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: radial-gradient(circle at center, #1a1a2e 0%, var(--dark-bg) 70%, #000 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .command-center {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.02);
+        }
+
+        h1 {
+            margin-top: 0;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 24px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .file-upload-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #a0aec0;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px dashed var(--neon-blue);
+            padding: 15px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+
+        input[type="file"]:hover {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(138, 43, 226, 0.1));
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 16px 28px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+            margin-top: 10px;
+        }
+
+        button:hover:not(:disabled) {
+            background: var(--neon-blue);
+            color: #000;
+            box-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue);
+        }
+
+        button:disabled {
+            border-color: #4a5568;
+            color: #4a5568;
+            box-shadow: none;
+            cursor: not-allowed;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .loader-text {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            font-family: 'Consolas', monospace;
+            color: var(--neon-purple);
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        #results {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid var(--glass-border);
+        }
+
+        .match-yes {
+            border-color: var(--success-color) !important;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.1);
+        }
+
+        .match-no {
+            border-color: var(--fail-color) !important;
+            box-shadow: 0 0 30px rgba(255, 51, 102, 0.1);
+        }
+
+        h2#verdict {
+            margin-top: 0;
+            font-size: 28px;
+            letter-spacing: 2px;
+        }
+
+        .match-yes h2 { color: var(--success-color); text-shadow: 0 0 15px var(--success-color); }
+        .match-no h2 { color: var(--fail-color); text-shadow: 0 0 15px var(--fail-color); }
+
+        .confidence-score {
+            font-size: 42px;
+            font-weight: 300;
+            margin: 15px 0 0 0;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="command-center">
+        <h1>Voice Matrix Analyzer</h1>
+        
+        <form id="analyzeForm">
+            <div class="file-upload-group">
+                <label>Target Identity Alpha (Audio 1)</label>
+                <input type="file" id="audio1" accept="audio/*" required>
+            </div>
+            
+            <div class="file-upload-group">
+                <label>Target Identity Beta (Audio 2)</label>
+                <input type="file" id="audio2" accept="audio/*" required>
+            </div>
+
+            <button type="submit" id="executeBtn">Initiate Verification</button>
+        </form>
+
+        <div class="loader-text" id="loader">> SYSTEM PROCESSING: EXTRACTING NEURAL EMBEDDINGS...</div>
+
+        <div id="results">
+            <h2 id="verdict"></h2>
+            <div style="color: #a0aec0; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; margin-top: 15px;">Similarity Matrix Score</div>
+            <p class="confidence-score"><span id="percentage">0</span>%</p>
+        </div>
+    </div>
+
+    <script>
+        // 1. SUPABASE INTEGRATION (Directly connected to your keys)
+        const SUPABASE_URL = 'https://ikezeopkiolxojvrvfde.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrZXplb3BraW9seG9qdnJ2ZmRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MTIzNzQsImV4cCI6MjA5NTk4ODM3NH0.AkO2ziqpeyFWBrEeA--iMNevh5xlgguUq8t4lXRv5i0';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // 2. AI ENGINE URL 
+        // NOTE: This must point to where your app.py is running. 
+        // If testing locally, keep it as 127.0.0.1. If you host app.py on Render/Railway, paste that URL here.
+        const AI_ENGINE_URL = 'http://127.0.0.1:5000/analyze';
+
+        document.getElementById('analyzeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const file1 = document.getElementById('audio1').files[0];
+            const file2 = document.getElementById('audio2').files[0];
+            const btn = document.getElementById('executeBtn');
+            const loader = document.getElementById('loader');
+            const resultsDiv = document.getElementById('results');
+            
+            // UI Reset
+            btn.disabled = true;
+            btn.innerText = "Processing...";
+            loader.style.display = 'block';
+            resultsDiv.style.display = 'none';
+            resultsDiv.className = ''; // reset classes
+
+            try {
+                // Step 1: Upload to Supabase Storage 'audio-samples'
+                loader.innerText = "> SYSTEM PROCESSING: SECURELY UPLOADING AUDIO TO SUPABASE...";
+                
+                const ext1 = file1.name.split('.').pop();
+                const ext2 = file2.name.split('.').pop();
+                const filename1 = `alpha_${Date.now()}.${ext1}`;
+                const filename2 = `beta_${Date.now()}.${ext2}`;
+
+                const { error: err1 } = await supabase.storage.from('audio-samples').upload(filename1, file1);
+                const { error: err2 } = await supabase.storage.from('audio-samples').upload(filename2, file2);
+
+                if (err1 || err2) throw new Error("Supabase Upload Failed. Check RLS policies.");
+
+                // Step 2: Retrieve Public URLs from Supabase
+                const url1 = supabase.storage.from('audio-samples').getPublicUrl(filename1).data.publicUrl;
+                const url2 = supabase.storage.from('audio-samples').getPublicUrl(filename2).data.publicUrl;
+
+                // Step 3: Trigger Python AI Engine
+                loader.innerText = "> SYSTEM PROCESSING: CROSS-REFERENCING NEURAL VOICEPRINTS...";
+                
+                const response = await fetch(AI_ENGINE_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ audio_url_1: url1, audio_url_2: url2 })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Step 4: Display Results
+                    resultsDiv.style.display = 'block';
+                    document.getElementById('percentage').innerText = data.percentage;
+                    
+                    if (data.match) {
+                        resultsDiv.classList.add('match-yes');
+                        document.getElementById('verdict').innerHTML = "ACCESS GRANTED:<br>IDENTITY MATCH";
+                    } else {
+                        resultsDiv.classList.add('match-no');
+                        document.getElementById('verdict').innerHTML = "ACCESS DENIED:<br>IDENTITY MISMATCH";
+                    }
+                } else {
+                    alert("AI Engine Error: " + (data.error || "Ensure Python server is running."));
+                }
+
+                // Step 5: (Optional) Clean up storage files using DELETE to save space
+                await supabase.storage.from('audio-samples').remove([filename1, filename2]);
+
+            } catch (error) {
+                alert("SYSTEM FAILURE: " + error.message);
+                console.error(error);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Initiate Verification";
+                loader.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
