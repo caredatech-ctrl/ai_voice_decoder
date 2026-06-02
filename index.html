@@ -200,15 +200,13 @@
     </div>
 
     <script>
-        // 1. SUPABASE INTEGRATION (Directly connected to your keys)
+        // 1. SUPABASE INTEGRATION (Directly connected to your specific keys)
         const SUPABASE_URL = 'https://ikezeopkiolxojvrvfde.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrZXplb3BraW9seG9qdnJ2ZmRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MTIzNzQsImV4cCI6MjA5NTk4ODM3NH0.AkO2ziqpeyFWBrEeA--iMNevh5xlgguUq8t4lXRv5i0';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // 2. AI ENGINE URL 
-        // NOTE: This must point to where your app.py is running. 
-        // If testing locally, keep it as 127.0.0.1. If you host app.py on Render/Railway, paste that URL here.
-        const AI_ENGINE_URL = 'http://127.0.0.1:5000/analyze';
+        // 2. AI ENGINE URL (Wired directly to your new live Hugging Face Space)
+        const AI_ENGINE_URL = 'https://dali135-voice-matrix-engine.hf.space/analyze';
 
         document.getElementById('analyzeForm').addEventListener('submit', async function(e) {
             e.preventDefault();
