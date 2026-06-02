@@ -3,206 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise AI Voice Verification Matrix</title>
-    
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+    <title>Enterprise AI Voice Matrix</title>
     <style>
-        /* High-Luxury Glassmorphism & Neon Aesthetic */
-        :root {
-            --neon-blue: #00f0ff;
-            --neon-purple: #8a2be2;
-            --dark-bg: #0b0c10;
-            --glass-bg: rgba(20, 22, 30, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-main: #e0e6ed;
-            --success-color: #00ff88;
-            --fail-color: #ff3366;
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: radial-gradient(circle at center, #1a1a2e 0%, var(--dark-bg) 70%, #000 100%);
-            color: var(--text-main);
-            min-height: 100vh;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .command-center {
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border);
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            padding: 40px;
-            width: 100%;
-            max-width: 600px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.02);
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            margin-top: 0;
-            font-weight: 300;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-size: 24px;
-            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .file-upload-group {
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #a0aec0;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        input[type="file"] {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px dashed var(--neon-blue);
-            padding: 15px;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-            transition: all 0.3s ease;
-            box-sizing: border-box;
-            cursor: pointer;
-        }
-
-        button {
-            width: 100%;
-            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(138, 43, 226, 0.1));
-            border: 1px solid var(--neon-blue);
-            color: var(--neon-blue);
-            padding: 16px 28px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        button:hover:not(:disabled) {
-            background: var(--neon-blue);
-            color: #000;
-            box-shadow: 0 0 20px var(--neon-blue);
-        }
-
-        button:disabled {
-            border-color: #4a5568;
-            color: #4a5568;
-            cursor: not-allowed;
-            background: rgba(0,0,0,0.5);
-        }
-
-        #results {
-            display: none;
-            margin-top: 30px;
-            padding: 25px;
-            border-radius: 12px;
-            text-align: center;
-            background: rgba(0,0,0,0.6);
-            border: 1px solid var(--glass-border);
-        }
-
-        .match-yes { border-color: var(--success-color) !important; box-shadow: 0 0 30px rgba(0, 255, 136, 0.1); }
-        .match-no { border-color: var(--fail-color) !important; box-shadow: 0 0 30px rgba(255, 51, 102, 0.1); }
-        h2#verdict { margin-top: 0; font-size: 28px; letter-spacing: 2px; }
-        .match-yes h2 { color: var(--success-color); text-shadow: 0 0 15px var(--success-color); }
-        .match-no h2 { color: var(--fail-color); text-shadow: 0 0 15px var(--fail-color); }
-        .confidence-score { font-size: 42px; font-weight: 300; margin: 15px 0 0 0; color: #fff; }
-
-        /* NEW: On-Screen Diagnostic Terminal */
-        .diagnostic-terminal {
-            background: #000;
-            border: 1px solid #333;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 600px;
-            padding: 15px;
-            box-sizing: border-box;
-            font-family: 'Consolas', 'Courier New', monospace;
-            font-size: 12px;
-            color: #00ff00;
-            height: 200px;
-            overflow-y: auto;
-            display: none;
-            box-shadow: inset 0 0 10px rgba(0,255,0,0.1);
-        }
-        .log-error { color: #ff3366; }
-        .log-sys { color: #00f0ff; }
+        :root { --neon-blue: #00f0ff; --neon-purple: #8a2be2; --dark-bg: #0b0c10; --glass-bg: rgba(20, 22, 30, 0.65); --success-color: #00ff88; --fail-color: #ff3366; }
+        body { font-family: 'Segoe UI', sans-serif; background: radial-gradient(circle at center, #1a1a2e 0%, var(--dark-bg) 70%, #000 100%); color: #e0e6ed; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .command-center { background: var(--glass-bg); backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 40px; width: 100%; max-width: 600px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+        h1 { margin-top: 0; text-align: center; text-transform: uppercase; font-weight: 300; background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #a0aec0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        input[type="file"] { width: 100%; background: rgba(0,0,0,0.4); border: 1px dashed var(--neon-blue); padding: 15px; border-radius: 8px; color: #fff; margin-bottom: 20px; box-sizing: border-box; cursor: pointer; }
+        button { width: 100%; background: linear-gradient(135deg, rgba(0,240,255,0.1), rgba(138,43,226,0.1)); border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 16px; border-radius: 8px; font-weight: 600; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+        button:hover:not(:disabled) { background: var(--neon-blue); color: #000; box-shadow: 0 0 20px var(--neon-blue); }
+        button:disabled { border-color: #4a5568; color: #4a5568; background: rgba(0,0,0,0.5); cursor: not-allowed; }
+        .terminal { background: #000; border: 1px solid #333; border-radius: 8px; width: 100%; padding: 15px; font-family: 'Consolas', monospace; font-size: 12px; color: #00ff00; height: 150px; overflow-y: auto; margin-top: 20px; display: none; box-sizing: border-box; }
+        #results { display: none; margin-top: 20px; padding: 25px; border-radius: 12px; text-align: center; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); }
+        .match-yes { border-color: var(--success-color) !important; color: var(--success-color); box-shadow: 0 0 30px rgba(0,255,136,0.1); }
+        .match-no { border-color: var(--fail-color) !important; color: var(--fail-color); box-shadow: 0 0 30px rgba(255,51,102,0.1); }
+        .confidence-score { font-size: 42px; font-weight: 300; margin: 10px 0 0 0; color: #fff; }
     </style>
 </head>
 <body>
 
     <div class="command-center">
-        <h1>Voice Matrix Analyzer</h1>
+        <h1>Voice Matrix Engine</h1>
         
         <form id="analyzeForm">
-            <div class="file-upload-group">
-                <label>Target Identity Alpha (Audio 1)</label>
-                <input type="file" id="audio1" accept="audio/*">
-            </div>
+            <label>Target Identity Alpha (Audio 1)</label>
+            <input type="file" id="audio1" accept="audio/*" required>
             
-            <div class="file-upload-group">
-                <label>Target Identity Beta (Audio 2)</label>
-                <input type="file" id="audio2" accept="audio/*">
-            </div>
+            <label>Target Identity Beta (Audio 2)</label>
+            <input type="file" id="audio2" accept="audio/*" required>
 
-            <button type="submit" id="executeBtn">Initiate Verification</button>
+            <button type="submit" id="executeBtn">Initiate Direct Processing</button>
         </form>
 
+        <div class="terminal" id="terminal"></div>
+
         <div id="results">
-            <h2 id="verdict"></h2>
-            <div style="color: #a0aec0; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; margin-top: 15px;">Similarity Matrix Score</div>
+            <h2 id="verdict" style="margin:0; font-size:24px; letter-spacing:2px;"></h2>
+            <div style="color: #a0aec0; font-size: 12px; margin-top: 15px; text-transform: uppercase;">Similarity Score</div>
             <p class="confidence-score"><span id="percentage">0</span>%</p>
         </div>
     </div>
 
-    <div class="diagnostic-terminal" id="terminal">
-        <div class="log-sys">> SYSTEM DIAGNOSTIC TERMINAL INITIATED...</div>
-    </div>
-
     <script>
-        // Supabase & AI Engine setup
-        const SUPABASE_URL = 'https://ikezeopkiolxojvrvfde.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrZXplb3BraW9seG9qdnJ2ZmRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0MTIzNzQsImV4cCI6MjA5NTk4ODM3NH0.AkO2ziqpeyFWBrEeA--iMNevh5xlgguUq8t4lXRv5i0';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Directly hardwired to your exact Hugging Face container
         const AI_ENGINE_URL = 'https://dali135-voice-matrix-engine.hf.space/analyze';
-
-        // Terminal Logger Function
         const terminal = document.getElementById('terminal');
-        function sysLog(message, isError = false) {
+
+        function log(msg) {
             terminal.style.display = 'block';
-            const logLine = document.createElement('div');
-            logLine.innerHTML = `> ${message}`;
-            if (isError) logLine.className = 'log-error';
-            terminal.appendChild(logLine);
-            terminal.scrollTop = terminal.scrollHeight; // Auto-scroll to bottom
+            terminal.innerHTML += `<div>> ${msg}</div>`;
+            terminal.scrollTop = terminal.scrollHeight;
         }
 
         document.getElementById('analyzeForm').addEventListener('submit', async function(e) {
@@ -213,92 +64,54 @@
             const btn = document.getElementById('executeBtn');
             const resultsDiv = document.getElementById('results');
             
-            // Check if files exist first
-            if (!file1 || !file2) {
-                sysLog("CRITICAL ERROR: Both audio files must be selected before initiating.", true);
-                return;
-            }
-
-            // Reset UI for processing
             btn.disabled = true;
-            btn.innerText = "Processing...";
+            btn.innerText = "Extracting Voiceprints...";
             resultsDiv.style.display = 'none';
-            resultsDiv.className = '';
+            terminal.innerHTML = "";
             
-            sysLog("===================================");
-            sysLog("VERIFICATION SEQUENCE INITIATED");
-            sysLog(`Loaded Alpha: ${file1.name} (${(file1.size/1024).toFixed(1)} KB)`);
-            sysLog(`Loaded Beta: ${file2.name} (${(file2.size/1024).toFixed(1)} KB)`);
+            log("INITIATING DIRECT AI PIPELINE...");
+            log(`Host URL: window.location.hostname`);
+            log(`Packaging Alpha Payload...`);
+            log(`Packaging Beta Payload...`);
+
+            const formData = new FormData();
+            formData.append('audio1', file1);
+            formData.append('audio2', file2);
 
             try {
-                // Step 1: Upload to Supabase
-                sysLog("<span class='log-sys'>[1/3] Uploading payloads to Supabase Storage...</span>");
-                
-                const ext1 = file1.name.split('.').pop();
-                const ext2 = file2.name.split('.').pop();
-                const filename1 = `alpha_${Date.now()}.${ext1}`;
-                const filename2 = `beta_${Date.now()}.${ext2}`;
-
-                const { data: d1, error: err1 } = await supabase.storage.from('audio-samples').upload(filename1, file1);
-                if (err1) throw new Error("Supabase Alpha Upload Failed: " + err1.message);
-                
-                const { data: d2, error: err2 } = await supabase.storage.from('audio-samples').upload(filename2, file2);
-                if (err2) throw new Error("Supabase Beta Upload Failed: " + err2.message);
-
-                sysLog("Upload Complete. Generating Public Access URLs...");
-                const url1 = supabase.storage.from('audio-samples').getPublicUrl(filename1).data.publicUrl;
-                const url2 = supabase.storage.from('audio-samples').getPublicUrl(filename2).data.publicUrl;
-
-                // Step 2: Trigger Hugging Face
-                sysLog(`<span class='log-sys'>[2/3] Contacting AI Engine at: ${AI_ENGINE_URL}</span>`);
-                sysLog("Awaiting Neural Processing (This may take 15-30 seconds)...");
+                log(`Uplinking directly to Hugging Face Mainframe...`);
+                log(`Waiting for Neural Extractor (Takes 15-45 seconds)...`);
                 
                 const response = await fetch(AI_ENGINE_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ audio_url_1: url1, audio_url_2: url2 })
+                    body: formData
                 });
                 
                 if (!response.ok) {
                     const errText = await response.text();
-                    throw new Error(`AI Engine HTTP Error ${response.status}: ${errText}`);
+                    throw new Error(`HTTP ${response.status}: ${errText}`);
                 }
-
+                
                 const data = await response.json();
-                
-                if (data.error) {
-                    throw new Error(`AI Model Error: ${data.error}`);
-                }
+                if (data.error) throw new Error(data.error);
 
-                sysLog("<span class='log-sys'>[3/3] Analysis Complete. Rendering Data.</span>");
+                log("ANALYSIS COMPLETE. SECURE CONNECTION CLOSED.");
                 
-                // Step 3: Display Results
                 resultsDiv.style.display = 'block';
                 document.getElementById('percentage').innerText = data.percentage;
                 
                 if (data.match) {
-                    resultsDiv.classList.add('match-yes');
-                    document.getElementById('verdict').innerHTML = "ACCESS GRANTED:<br>IDENTITY MATCH";
-                    sysLog("RESULT: POSITIVE MATCH.");
+                    resultsDiv.className = 'match-yes';
+                    document.getElementById('verdict').innerHTML = "MATCH CONFIRMED";
                 } else {
-                    resultsDiv.classList.add('match-no');
-                    document.getElementById('verdict').innerHTML = "ACCESS DENIED:<br>IDENTITY MISMATCH";
-                    sysLog("RESULT: NEGATIVE MATCH.");
+                    resultsDiv.className = 'match-no';
+                    document.getElementById('verdict').innerHTML = "IDENTITY MISMATCH";
                 }
-
-                // Step 4: Cleanup
-                sysLog("Cleaning up temporary database files...");
-                await supabase.storage.from('audio-samples').remove([filename1, filename2]);
-                sysLog("Sequence Terminated Successfully.");
-
             } catch (error) {
-                sysLog(`SYSTEM FAILURE: ${error.message}`, true);
-                if (error.message.includes("Failed to fetch")) {
-                    sysLog("HINT: 'Failed to fetch' usually means the Hugging Face space is sleeping or blocked by CORS.", true);
-                }
+                log(`<span style="color:#ff3366">SYSTEM FAILURE: ${error.message}</span>`);
             } finally {
                 btn.disabled = false;
-                btn.innerText = "Initiate Verification";
+                btn.innerText = "Initiate Direct Processing";
             }
         });
     </script>
